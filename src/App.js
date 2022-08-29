@@ -1,25 +1,50 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useState, useEffect } from "react";
+import './App.css'
+
+const useTax = (t1, t2)=> {
+  const [price, setPrice] = useState(1000);
+  const [tx1] = useState(t1);
+  const [tx2] = useState(t2);
+
+  const tax = ()=> {
+    return Math.floor(price * (1.0 + tx1 / 100));
+  }
+
+  const reduced = ()=> {
+    return Math.floor(price * (1.0 + tx2 / 100));
+  }
+
+  return [price, tax, reduced, setPrice]
+}
+
+function AlertMessage(props) {
+  const [price, tax, reduced, setPrice] = useTax(10, 8);
+
+  const DoChange = (e)=> {
+    let p = e.target.value;
+    setPrice(p);
+  }
+
+  return <div className="alert alert-primary h5">
+    <p className="h5">通常 : {tax()}</p>
+    <p className="h5">通常じゃねえ : {reduced()}</p>
+    <div className="form-group">
+      <label className="form-group-label">Price:</label>
+      <input type="number" className="form-control" onChange={DoChange} value={price} />
+    </div>
+  </div>
+}
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+    <div>
+      <h1 className="bg-primary text-white display-4">React</h1>
+      <div className="container">
+        <h4 className="my-3">Hooks sample</h4>
+        <AlertMessage />
+      </div>
     </div>
-  );
+  )
 }
 
 export default App;
