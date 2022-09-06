@@ -17,6 +17,16 @@ const useTax = (t1, t2)=> {
   return [price, tax, reduced, setPrice]
 }
 
+function useCalc(num=0, func = (a)=>{return a}) {
+  const [msg, setMsg] = useState(null);
+
+  const setValue = (p) => {
+    let res = func(p);
+    setMsg(<p className="h5">*{p}の結果は{res}</p>)
+  }
+  return [msg, setValue];
+}
+
 function AlertMessage(props) {
   const [price, tax, reduced, setPrice] = useTax(10, 8);
 
