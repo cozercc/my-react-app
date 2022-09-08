@@ -1,52 +1,53 @@
 import React, { useState, useEffect } from "react";
 import './App.css'
-
-const useTax = (t1, t2)=> {
-  const [price, setPrice] = useState(1000);
-  const [tx1] = useState(t1);
-  const [tx2] = useState(t2);
-
-  const tax = ()=> {
-    return Math.floor(price * (1.0 + tx1 / 100));
-  }
-
-  const reduced = ()=> {
-    return Math.floor(price * (1.0 + tx2 / 100));
-  }
-
-  return [price, tax, reduced, setPrice]
-}
-
-function useCalc(num=0, func = (a)=>{return a}) {
-  const [msg, setMsg] = useState(null);
-
-  const setValue = (p) => {
-    let res = func(p);
-    setMsg(<p className="h5">*{p}の結果は{res}</p>)
-  }
-  return [msg, setValue];
-}
+import usePersist from "./Persist";
 
 function AlertMessage(props) {
-  const [price, tax, reduced, setPrice] = useTax(10, 8);
+  const [name, setName] = useState("");
+  const [mail, setMail] = useState("");
+  const [age, setAge] = useState(0);
+  const [mydata, setMydata] = usePersist("mydata", null);
 
-  const DoChange = (e)=> {
-    let p = e.target.value;
-    setPrice(p);
-  }
+  const onChangeName = (e)=> {
+    setName(e.target.value);
+  };
+  const onChangeMail = (e)=> {
+    setMail(e.target.value);
+  };
+  const onChangeAge = (e)=> {
+    setAge(e.target.value);
+  };
+  const onAction = (e)=> {
+    const data = {
+      name: name,
+      mail: mail,
+      age: age
+    };
+    setMydata(data);
+  };
 
-  return <div className="alert alert-primary h5">
-    <p className="h5">通常 : {tax()}</p>
-    <p className="h5">通常じゃねえ : {reduced()}</p>
+  return <div className="alert alert-primary h5 text-primary">
+    <h5 className="mb-4">{JSON.stringify(mydata)}</h5>
     <div className="form-group">
-      <label className="form-group-label">Price:</label>
-      <input type="number" className="form-control" onChange={DoChange} value={price} />
+      <label className="h6">Name</label>
+      <input type="text" onChange={onChangeName} className="form-control" />
     </div>
+    <div className="form-group">
+      <label className="h6">Mail</label>
+      <input type="mail" onChange={onChangeMail} className="form-control" />
+    </div>
+    <div className="form-group">
+      <label className="h6">Age</label>
+      <input type="number" onChange={onChangeAge} className="form-control" />
+    </div>
+    <button onClick={onAction} className="btn btn-primary">
+      Save it!
+    </button>
   </div>
 }
 
-function App() {
-  return (
+function App(){
+  return(
     <div>
       <h1 className="bg-primary text-white display-4">React</h1>
       <div className="container">
